@@ -5,7 +5,7 @@ using System.Linq;
 namespace ChessMainLoop
 {
     /// <summary>
-    /// Contains pools for objects and methods to put objects and recieve objects to and from pools.
+    /// Contains pools for objects and methods to put objects and receive objects to and from pools.
     /// </summary>
     public  class ObjectPool : Singleton<ObjectPool>
     {
@@ -28,14 +28,14 @@ namespace ChessMainLoop
         }
 
         /// <summary>
-        /// Returns number of path objects indexed by name equal to quantity parameter. Gets objects from pool or instantiates new ones if quantity in pool isnt enough.
+        /// Returns number of path objects indexed by name equal to quantity parameter. Gets objects from pool or instantiates new ones if quantity in pool isn't enough.
         /// </summary>
         /// <returns>List of path objects quantity long</returns>
         public GameObject[] GetHighlightPaths(int quantity, PathPieceType pathPieceType)
         {
             GameObject[] paths = new GameObject[quantity];
 
-            for(int i = 0; i < quantity; i++)
+            for (int i = 0; i < quantity; i++)
             {
                 if (_poolDictionary[pathPieceType].Count > 0)
                 {
@@ -59,7 +59,7 @@ namespace ChessMainLoop
         public GameObject GetHighlightPath(PathPieceType pathPieceType)
         {
             /*
-             * Potrebno je zamijeniti liniju return null; logikom koja dohvaća HighlightPath objekt definiran parametrom tipa, 
+             * Potrebno je zamijeniti liniju "return null;" logikom koja dohvaća HighlightPath objekt definiran parametrom tipa 
              * ili ako ih nema više dostupnih stvara novi.
              */
             return null;
@@ -71,7 +71,7 @@ namespace ChessMainLoop
         public void RemoveHighlightPath(PathPiece path)
         {
             /*
-             * Potrebno je nadopuniti metodu logikom koja onesposobljuje objet za odabir polja, te sprema referencu na njegov game object.
+             * Potrebno je nadopuniti metodu logikom koja onesposobljuje objekt za odabir polja, te sprema referencu na njegov game object.
              */
         }
 

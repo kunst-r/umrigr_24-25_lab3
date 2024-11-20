@@ -95,7 +95,7 @@ namespace ChessReplay
                 _gridState[startX, startY] = null;
                 return;
             }
-            if(startPosition.x == -1)
+            if (startPosition.x == -1)
             {
                 return;
             }

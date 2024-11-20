@@ -60,7 +60,7 @@ namespace ChessMainLoop
         }
 
         /// <summary>
-        /// Retrieves current state of that fied on board
+        /// Retrieves current state of that field on board
         /// </summary>
         /// <returns>Piece reference of the piece on the field, or null if not occupied</returns>
         public Piece GetField(int row, int column) => _gridState[row, column];
@@ -77,7 +77,7 @@ namespace ChessMainLoop
         }
 
         /// <summary>
-        /// Checks if cooridantes are inside board borders
+        /// Checks if coordinates are inside board borders
         /// </summary>
         public bool IsInBorders(int row, int column)
         {

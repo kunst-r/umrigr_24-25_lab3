@@ -20,7 +20,8 @@ public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 
     protected virtual void Init()
     {
-        if (Instance == null) Instance = this as T;
+        if (Instance == null) 
+            Instance = this as T;
     }
 
     protected virtual void OnApplicationQuit()
@@ -37,13 +38,13 @@ public abstract class SingletonReplaceable<T> : MonoBehaviour where T : MonoBeha
     protected virtual void Awake()
     {
         Instance = this as T;
-
         Init();
     }
 
     protected virtual void Init()
     {
-        if (Instance == null) Instance = this as T;
+        if (Instance == null) 
+            Instance = this as T;
     }
 
     protected virtual void OnApplicationQuit()

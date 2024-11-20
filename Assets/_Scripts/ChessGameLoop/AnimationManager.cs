@@ -33,12 +33,12 @@ namespace ChessMainLoop
         {
             if (piece.PieceColor == SideColor.White)
             {
-                if(piece is Knight || piece is King)
+                if (piece is Knight || piece is King)
                 {
                     return _whiteKnightAnimator;
                 }
 
-                if(piece is Bishop)
+                if (piece is Bishop)
                 {
                     return _whiteBishopAnimator;
                 }
@@ -74,14 +74,14 @@ namespace ChessMainLoop
         {
             Animator pieceAnimator = piece.Animator;
 
-            //Performs animation to raise the piece and tilt it
+            // Performs animation to raise the piece and tilt it
             pieceAnimator.SetInteger("State", 1);
             while (pieceAnimator.GetCurrentAnimatorStateInfo(0).IsName("Travel") == false)
             {
                 yield return new WaitForSeconds(0.001f);
             }
 
-            //performs translation to target position
+            // performs translation to target position
             target.y = piece.transform.localPosition.y;
             while (piece.transform.localPosition != target)
             {
@@ -91,7 +91,7 @@ namespace ChessMainLoop
 
             _moveSound.Play();
 
-            //Perfoms root motion animation that puts piece back down
+            // Perfoms root motion animation that puts piece back down
             pieceAnimator.SetInteger("State", 2);
             if (killTarget != null)
             {

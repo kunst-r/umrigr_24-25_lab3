@@ -22,7 +22,8 @@ namespace ChessMainLoop
             {
                 for (int j = 0; j < grid.GetLength(1); j++)
                 {
-                    if (grid[i, j] == null) continue;
+                    if (grid[i, j] == null) 
+                        continue;
 
                     if (grid[i, j].PieceColor == turnPlayer && grid[i, j].CanMove(i, j) == true)
                     {
@@ -71,7 +72,7 @@ namespace ChessMainLoop
         {
             Piece piece;
 
-            //Checks in each direction from lookup table if there is an available spot to move which doesnt result in check for piece player side
+            // Checks in each direction from lookup table if there is an available spot to move which doesn't result in check for piece player side
             for (int j = 0; j < _lookupTable.GetLength(0); j++)
             {
                 for (int i = 1; BoardState.Instance.IsInBorders(row + i * _lookupTable[j, 0], column + i * _lookupTable[j, 1]); i++)
@@ -81,9 +82,11 @@ namespace ChessMainLoop
 
                     piece = BoardState.Instance.GetField(row + i * _lookupTable[j, 0], column + i * _lookupTable[j, 1]);
 
-                    if (piece == null) return true;
-                    else if (piece.PieceColor != _attackerColor) return true;
-                    else break;
+                    if (piece == null) 
+                        return true;
+                    if (piece.PieceColor != _attackerColor) 
+                        return true;
+                    break;
                 }
             }
 
@@ -95,15 +98,18 @@ namespace ChessMainLoop
             Piece piece;
 
             //Checks if the target location is available for moving and doesnt result in a check
-            if (!BoardState.Instance.IsInBorders(row + rowDirection, column + columnDirection)) return false;
+            if (!BoardState.Instance.IsInBorders(row + rowDirection, column + columnDirection)) 
+                return false;
 
             SideColor _checkSide = BoardState.Instance.SimulateCheckState(row, column, row + rowDirection, column + columnDirection);
             piece = BoardState.Instance.GetField(row + rowDirection, column + columnDirection);
 
-            if (_checkSide == _attackerColor || _checkSide == SideColor.Both) return false;
-
-            if (piece == null) return true;
-            else return piece.PieceColor != _attackerColor;
+            if (_checkSide == _attackerColor || _checkSide == SideColor.Both) 
+                return false;
+            if (piece == null) 
+                return true;
+            
+            return piece.PieceColor != _attackerColor;
         }
     }
 }

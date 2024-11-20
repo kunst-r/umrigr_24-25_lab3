@@ -11,7 +11,7 @@ namespace ChessMainLoop
 
         public static event PieceMoved PieceMoved;
 
-        //If user presses anywhere thats not a piece and currently selected piece exists, piece gets deselcted
+        //If user presses anywhere that's not a piece and currently selected piece exists, piece gets deselected
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.Mouse0) == false || AnyActive == false)
@@ -99,7 +99,7 @@ namespace ChessMainLoop
             Piece king = firstPiece is King ? firstPiece : secondPiece;
             Piece rook = firstPiece is Rook ? firstPiece : secondPiece;
 
-            //If target is a castling position performs special castling action. Position calculations are done differently if the target is a King or a Rook          
+            // If target is a castling position performs special castling action. Position calculations are done differently if the target is a King or a Rook          
             int columnMedian = (int)Mathf.Ceil((king.Location.Column + rook.Location.Column) / 2f);
             int rookNewColumn = columnMedian > king.Location.Column ? columnMedian - 1 : columnMedian + 1;
             SideColor checkedSide;

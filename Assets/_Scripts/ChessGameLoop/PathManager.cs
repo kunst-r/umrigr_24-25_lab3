@@ -41,7 +41,7 @@ namespace ChessMainLoop
         private static void CreatePathOnDirection(Piece caller, int[,] lookupTable)
         {
             /*
-             * Potrebno je nadopuniti metodu logikom za pomicanje figure u danom smijeru definiranom parametrom lookupTable.
+             * Potrebno je nadopuniti metodu logikom za pomicanje figure u danom smjeru definiranom parametrom lookupTable.
              */
         }
 
@@ -60,10 +60,12 @@ namespace ChessMainLoop
 
         private static bool CreatePath(Piece caller, int startRow, int startColumn, int newRow, int newColumn)
         {
-            if (!BoardState.Instance.IsInBorders(newRow, newColumn)) return false;
+            if (!BoardState.Instance.IsInBorders(newRow, newColumn)) 
+                return false;
+            
             SideColor checkSide = BoardState.Instance.SimulateCheckState(startRow, startColumn, newRow, newColumn);
-
-            if (checkSide == caller.PieceColor || checkSide == SideColor.Both) return false;
+            if (checkSide == caller.PieceColor || checkSide == SideColor.Both) 
+                return false;
 
             Piece piece = BoardState.Instance.GetField(newRow, newColumn);
             GameObject path;
@@ -76,7 +78,8 @@ namespace ChessMainLoop
                 path = ObjectPool.Instance.GetHighlightPath(PathPieceType.PathRed);
                 path.GetComponent<PathPiece>().AssignPiece(piece);
             }
-            else return false;
+            else 
+                return false;
 
             path.GetComponent<PathPiece>().Location = (newRow, newColumn);
 
@@ -109,18 +112,20 @@ namespace ChessMainLoop
         /// </summary>
         public static void CreateCastleSpot(Piece caller, Piece target)
         {
-            if (GameManager.Instance.CheckedSide == caller.PieceColor) return;
+            if (GameManager.Instance.CheckedSide == caller.PieceColor) 
+                return;
 
             int rowCaller = caller.Location.Row;
             int columnCaller = caller.Location.Column;
             int rowTarget = target.Location.Row;
             int columnTarget = target.Location.Column;
 
-            //Check to see if there are any pieces between rook and king
+            // Check to see if there are any pieces between rook and king
             columnCaller += columnTarget > columnCaller ? 1 : -1;
             while (columnCaller != columnTarget)
             {
-                if (BoardState.Instance.GetField(rowCaller, columnCaller) != null) return;
+                if (BoardState.Instance.GetField(rowCaller, columnCaller) != null) 
+                    return;
                 columnCaller += columnTarget > columnCaller ? 1 : -1;
             }
 

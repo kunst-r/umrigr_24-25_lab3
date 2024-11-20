@@ -58,12 +58,12 @@ namespace MainMenu
         /// </summary>
         IEnumerator AsyncLoading(string scene)
         {
-            AsyncOperation _loading = SceneManager.LoadSceneAsync(scene);
+            AsyncOperation loading = SceneManager.LoadSceneAsync(scene);
 
-            while (_loading.isDone == false)
+            while (loading.isDone == false)
             {
-                _loadingSlider.value = _loading.progress;
-                _loadPercent.SetText((int)(_loading.progress * 100) + "%");
+                _loadingSlider.value = loading.progress;
+                _loadPercent.SetText((int)(loading.progress * 100) + "%");
                 yield return new WaitForSeconds(0.01f);
             }
         }

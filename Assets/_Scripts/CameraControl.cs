@@ -25,13 +25,19 @@ public class CameraControl : MonoBehaviour
         var movementSpeed = fastMode ? _fastMovementSpeed : this._movementSpeed;
 
         Vector3 moveDirection = new Vector3();
-        if (Input.GetKey(KeyCode.W) || (Input.GetKey(KeyCode.Mouse1) && Input.GetKey(KeyCode.Mouse2))) moveDirection += transform.forward;
-        if (Input.GetKey(KeyCode.W)) moveDirection += -transform.forward;
-        if (Input.GetKey(KeyCode.A)) moveDirection += -transform.right;
-        if (Input.GetKey(KeyCode.D)) moveDirection += transform.right;
-        if (Input.GetKey(KeyCode.Space)) moveDirection += Vector3.up;
-        if (Input.GetKey(KeyCode.Q)) moveDirection += Vector3.down;
-        moveDirection = moveDirection * movementSpeed * Time.deltaTime;
+        if (Input.GetKey(KeyCode.W) || (Input.GetKey(KeyCode.Mouse1) && Input.GetKey(KeyCode.Mouse2)))
+            moveDirection += transform.forward;
+        if (Input.GetKey(KeyCode.W)) 
+            moveDirection += -transform.forward;
+        if (Input.GetKey(KeyCode.A))
+            moveDirection += -transform.right;
+        if (Input.GetKey(KeyCode.D)) 
+            moveDirection += transform.right;
+        if (Input.GetKey(KeyCode.Space)) 
+            moveDirection += Vector3.up;
+        if (Input.GetKey(KeyCode.Q)) 
+            moveDirection += Vector3.down;
+        moveDirection = moveDirection * (movementSpeed * Time.deltaTime);
 
         transform.position = TryToMove(transform.position, moveDirection);
 
@@ -47,7 +53,7 @@ public class CameraControl : MonoBehaviour
         if (axis != 0)
         {
             var zoomSensitivity = fastMode ? this._fastZoomSensitivity : this._zoomSensitivity;
-            transform.position = TryToMove(transform.position, transform.forward * axis * zoomSensitivity);
+            transform.position = TryToMove(transform.position, transform.forward * (axis * zoomSensitivity));
         }       
 
     }

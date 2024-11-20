@@ -65,8 +65,8 @@ namespace ChessMainLoop
         private static bool IsAttackingKingInDirection(int row, int column, int[,] directionLookupTable, SideColor attackerColor)
         {
             /*
-             * Potrebno je zamijeniti liniju return false; logikom za provjeru napadala li figura sa danog polja koordinatama row i column
-             * neprijateljskog kralja ovisnom o danom smijeru napada figure koji je definiran directionLookupTable parametrom.
+             * Potrebno je zamijeniti liniju "return false;" logikom za provjeru napada li figura s danog polja koordinatama row i column
+             * neprijateljskog kralja ovisnom o danom smjeru napada figure koji je definiran directionLookupTable parametrom.
              */
             return false;
         }

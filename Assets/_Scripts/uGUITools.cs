@@ -8,7 +8,8 @@ public class uGUITools : MonoBehaviour {
 		RectTransform t = Selection.activeTransform as RectTransform;
 		RectTransform pt = Selection.activeTransform.parent as RectTransform;
 
-		if(t == null || pt == null) return;
+		if (t == null || pt == null) 
+			return;
 		
 		Vector2 newAnchorsMin = new Vector2(t.anchorMin.x + t.offsetMin.x / pt.rect.width,
 		                                    t.anchorMin.y + t.offsetMin.y / pt.rect.height);
@@ -24,7 +25,8 @@ public class uGUITools : MonoBehaviour {
 	static void CornersToAnchors(){
 		RectTransform t = Selection.activeTransform as RectTransform;
 
-		if(t == null) return;
+		if (t == null) 
+			return;
 
 		t.offsetMin = t.offsetMax = new Vector2(0, 0);
 	}

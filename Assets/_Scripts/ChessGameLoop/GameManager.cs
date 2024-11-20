@@ -34,7 +34,7 @@ namespace ChessMainLoop
         /// <returns>Color of player that is checked</returns>
         private SideColor Check(SideColor checkSide)
         {
-            if(_checkedSide == SideColor.None && checkSide != SideColor.None)
+            if (_checkedSide == SideColor.None && checkSide != SideColor.None)
             {
                 _checkSound.Play();
             }

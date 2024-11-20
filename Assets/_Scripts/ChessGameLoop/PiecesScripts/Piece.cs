@@ -53,7 +53,8 @@ namespace ChessMainLoop
             _startColor = _renderer.material.color;
         }
 
-        //If its turn players piece sets it as selected and sets path pieces for it. If the piece is target of enemy or castle calls select method of path object this piece is assing to.
+        // If it's turn players piece, sets it as selected and sets path pieces for it.
+        // If the piece is target of enemy or castle, calls select method of path object this piece is ?assing? to.
         private void OnMouseDown()
         {
             if (_isActive == false && GameManager.Instance.TurnPlayer == _pieceColor && _assignedAsCastle == false && GameManager.Instance.IsPieceMoving == false) 
@@ -91,7 +92,7 @@ namespace ChessMainLoop
 
         private void OnMouseExit()
         {
-            if ((_isActive == false) || _assignedAsEnemy || _assignedAsCastle)
+            if (_isActive == false || _assignedAsEnemy || _assignedAsCastle)
             {
                 _renderer.material.color = _startColor;
             }
@@ -120,12 +121,13 @@ namespace ChessMainLoop
         {
             MoveTracker.Instance.AddMove(_row, _column, newRow, newColumn, GameManager.Instance.TurnCount);
 
-            if(this is Pawn && GameManager.Instance.Passantable)
+            if (this is Pawn && GameManager.Instance.Passantable)
             {
                 int direction = PieceColor == SideColor.Black ? 1 : -1;
 
                 if (newColumn == GameManager.Instance.Passantable.Location.Column 
-                    && _row == GameManager.Instance.Passantable.Location.Row && _column != newColumn)
+                    && _row == GameManager.Instance.Passantable.Location.Row 
+                    && _column != newColumn)
                 {
                     MoveTracker.Instance.AddMove(newRow - direction, newColumn, -1, -1, GameManager.Instance.TurnCount);
                 }
