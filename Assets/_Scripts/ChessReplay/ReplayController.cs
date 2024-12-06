@@ -78,6 +78,16 @@ namespace ChessReplay
                 /*
                  * Nadopuniti metodu logikom koja vraća unazad i izvodi prošli izvedeni potez.
                  */
+                
+                StopAutoplay();
+
+                _turnCount--;
+                List<Vector2> moves = _moveList[_turnCount];
+                BoardStateReplay.Instance.UndoMove(moves[1], moves[0], _turnCount);
+                if (moves.Count > 2 && moves[3].x >= 0)
+                {
+                    BoardStateReplay.Instance.UndoMove(moves[3], moves[2], _turnCount);
+                }
             }
         }
 
@@ -91,6 +101,17 @@ namespace ChessReplay
                 /*
                  * Nadopuniti metodu logikom koja izvodi slijedeći spremljeni potez.
                  */
+                StopAutoplay();
+
+                List<Vector2> moves = _moveList[_turnCount];
+                BoardStateReplay.Instance.MovePiece(moves[0], moves[1], _turnCount);
+                // max of 2 piece movements, e.g. castling
+                if (moves.Count > 2)
+                {
+                    BoardStateReplay.Instance.MovePiece(moves[2], moves[3], _turnCount);
+                }
+
+                _turnCount++;
             }
         }
 

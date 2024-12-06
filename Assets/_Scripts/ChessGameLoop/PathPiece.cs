@@ -47,11 +47,13 @@ namespace ChessMainLoop
 
         private void OnMouseEnter()
         {
+            
             _renderer.material.color = Color.white;
         }
 
         private void OnMouseExit()
         {
+            
             _renderer.material.color = _startColor;
         }
 

@@ -62,7 +62,21 @@ namespace ChessMainLoop
              * Potrebno je zamijeniti liniju "return null;" logikom koja dohvaća HighlightPath objekt definiran parametrom tipa 
              * ili ako ih nema više dostupnih stvara novi.
              */
-            return null;
+
+            GameObject path;
+            if (_poolDictionary[pathPieceType].Count > 0)
+            {
+                path = _poolDictionary[pathPieceType].Dequeue();
+                path.SetActive(true);
+            }
+            else
+            {
+                path = Instantiate(_prefabs.Where(piece => piece.PathPieceType == pathPieceType)
+                    .SingleOrDefault().gameObject, transform.parent);
+            }
+
+            return path;
+            // return GetHighlightPaths(1, pathPieceType)[0];
         }
 
         /// <summary>
@@ -73,6 +87,8 @@ namespace ChessMainLoop
             /*
              * Potrebno je nadopuniti metodu logikom koja onesposobljuje objekt za odabir polja, te sprema referencu na njegov game object.
              */
+            _poolDictionary[path.PathPieceType].Enqueue(path.gameObject);
+            path.gameObject.SetActive(false);
         }
 
         public void AddPiece(Piece piece)

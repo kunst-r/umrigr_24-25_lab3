@@ -105,6 +105,12 @@ namespace ChessMainLoop
              * Nadopunite kod sa logikom koja se treba izvršiti nakon što je figura pojedena. Potrebno je maknuti Figuru iz logičke 
              * matrice ploče pozivom pripadne metode klase BoardState, te je također Figuru potrebno dodati u object pool figura.
              */
+            if (BoardState.Instance.GetField(_row, _column) == this)
+            {
+                BoardState.Instance.ClearField(_row, _column);
+            }
+            
+            ObjectPool.Instance.AddPiece(this);
         }
 
         public void ResetPiece()

@@ -44,16 +44,38 @@ namespace ChessMainLoop
         public void ChangeTurn()
         {
             /*
-             * Potrebno je metodu nadopuniti logikom za mijenjanje strane poteza, ažiriranje broja poteza te provjeru je li igra potencijalno gotova.
+             * Potrebno je metodu nadopuniti logikom za mijenjanje strane poteza, ažuriranje broja poteza te provjeru je li igra potencijalno gotova.
              */
+            _turnPlayer = _turnPlayer == SideColor.White ? SideColor.Black : SideColor.White;
+            SideColor gameWinner = BoardState.Instance.CheckIfGameOver();
+            if (gameWinner == SideColor.Black)
+            {
+                GameEnd(SideColor.Black);
+            }
+            else if (gameWinner == SideColor.White)
+            {
+                GameEnd(SideColor.White);
+            }
+            else if (gameWinner == SideColor.Both)
+            {
+                GameEnd(SideColor.Both);
+            }
+            else
+            {
+                Debug.LogFormat("nema pobjednika zasad, igraj dalje");
+            }
+            _turnCount++;
         }
-
+        
         public void GameEnd(SideColor winner)
         {
             /*
              * Potrebno je metodu nadopuniti logikom koja se izvršava prilikom kraja igre. Potrebno je prikazati vizualne elemente za objavu 
              * pobjednika i onemogućiti kretanje kamere.
              */
+            UIManager.Instance.GameOver(winner);
+            _camera.enabled = false;
+            _turnPlayer = SideColor.None;
         }
 
         /// <summary>

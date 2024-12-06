@@ -81,12 +81,63 @@ namespace ChessMainLoop
         private IEnumerator PieceMoverRegular(int oldRow, int oldColumn, int newRow, int newColumn, Piece assignedEnemy)
         {
             /*
-             * Potrebno je nadopuniti metodu korutine koja pomiće figuru na odabrano polje.
+             * Potrebno je nadopuniti metodu korutine koja pomiče figuru na odabrano polje.
              * Također je potrebno ažurirati podatak o tome je li neki od igrača u stanju šaha nakon izvršavanja poteza.
              * Figuru je potrebno pomaknuti pozivom metode AnimationManager instance. 
              * Nakon što završi pomicanje figure potrebno je zamijeniti koja je strana na potezu.
              */
+
+            // todo: jel nam ovo potrebno?
+            SideColor checkedSide = BoardState.Instance.SimulateCheckState(oldRow, oldColumn, newRow, newColumn);
+            GameManager.Instance.CheckedSide = checkedSide;
+            
+            _activePiece.Move(newRow, newColumn);
+
+            float targetPosX = newRow * BoardState.Offset;
+            float targetPosY = _activePiece.transform.localPosition.y;
+            float targetPosZ = newColumn * BoardState.Offset;
+            
+            AnimationManager.Instance.MovePiece(_activePiece, new Vector3(targetPosX, targetPosY, targetPosZ), assignedEnemy);
+            while (AnimationManager.Instance.IsActive)
+            {
+                yield return new WaitForSeconds(0.01f);
+            }
+
+            _activePiece = null;
+            GameManager.Instance.IsPieceMoving = false;
+            GameManager.Instance.ChangeTurn();
+
+
+
+
+            /*
+            // moje staro
+            Piece callerPiece = BoardState.Instance.GetField(oldRow, oldColumn);
+
+            callerPiece.Move(newRow, newColumn);
+            // check check
+            SideColor checkedColor = BoardState.Instance.SimulateCheckState(oldRow, oldColumn, newRow, newColumn);
+            if (checkedColor == callerPiece.PieceColor)
+            {
+                // we can't make a move that would result in checking of our king
+            }
+            else if (assignedEnemy && assignedEnemy.PieceColor != callerPiece.PieceColor &&
+                     checkedColor == assignedEnemy.PieceColor)
+            {
+                // legal, we can check the opponent
+                callerPiece.Move(newRow, newColumn);
+            }
+            // animation
+            Vector3 newPosition = new Vector3();
+            newPosition.x = newRow * BoardState.Offset;
+            newPosition.z = newColumn * BoardState.Offset;
+            newPosition.y = callerPiece.transform.localPosition.y;
+            AnimationManager.Instance.MovePiece(callerPiece, newPosition, assignedEnemy);
+            // change current player status
+            GameManager.Instance.ChangeTurn();
+
             yield return null;
+            */
         }
 
         private IEnumerator PieceMoverCastle(int callerRow, int callerColumn, int castleRow, int castleColumn)
@@ -99,7 +150,7 @@ namespace ChessMainLoop
             Piece king = firstPiece is King ? firstPiece : secondPiece;
             Piece rook = firstPiece is Rook ? firstPiece : secondPiece;
 
-            // If target is a castling position performs special castling action. Position calculations are done differently if the target is a King or a Rook          
+            // If target is a castling position, performs special castling action. Position calculations are done differently if the target is a King or a Rook          
             int columnMedian = (int)Mathf.Ceil((king.Location.Column + rook.Location.Column) / 2f);
             int rookNewColumn = columnMedian > king.Location.Column ? columnMedian - 1 : columnMedian + 1;
             SideColor checkedSide;

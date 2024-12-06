@@ -88,14 +88,24 @@ namespace ChessMainLoop
         /// <summary>
         /// Mocks the translation of the piece to the target position and check if it would result in check.
         /// </summary>
-        /// <returns>Weather translation performed on the piece would result in a check state</returns>
+        /// <returns>Whether translation performed on the piece would result in a check state</returns>
         public SideColor SimulateCheckState(int rowOld, int columnOld, int rowNew, int columnNew)
         {
             /*
-             * Potrebno je zamijeniti liniju return SideColor.None logikom koja provjerava čijim stanjem šaha bi 
+             * Potrebno je zamijeniti liniju "return SideColor.None" logikom koja provjerava čijim stanjem šaha bi 
              * završilo stanje ploče prilikom izvođenja tog poteza.
              */
-            return SideColor.None;
+
+            Piece eatenPiece = _gridState[rowNew, columnNew];
+            _gridState[rowNew, columnNew] = _gridState[rowOld, columnOld];
+            _gridState[rowOld, columnOld] = null;
+
+            SideColor checkSide = CheckStateCalculator.CalculateCheck(_gridState);
+
+            _gridState[rowOld, columnOld] = _gridState[rowNew, columnNew];
+            _gridState[rowNew, columnNew] = eatenPiece;
+            
+            return checkSide;
         }
 
         public SideColor CheckIfGameOver()

@@ -7,17 +7,140 @@ namespace ChessMainLoop
         public override void CreatePath()
         {
             /*
-             * Potrebno je nadponuti kod koji će stvoriti objekte za odabir polja za kretanje. Potrebno je po potrebni stvriti 
+             * Potrebno je nadopuniti kod koji će stvoriti objekte za odabir polja za kretanje. Potrebno je po potrebni stvoriti 
              * polja za dijagonalni napad, En passant napad (https://en.wikipedia.org/wiki/En_passant), te polja za kretanje 
-             * jedno i dva mijesta prema naprijed.
+             * jedno i dva mjesta prema naprijed.
              */
+
+
+            if (this.PieceColor == SideColor.White)
+            {
+                // move one field forward
+                Piece enemyPieceInFront = BoardState.Instance.GetField(_row - 1, _column);
+                if (enemyPieceInFront == null)
+                {
+                    PathManager.CreatePathInSpotDirection(this, -1, 0);
+                }
+
+                // move two fields forward
+                if (enemyPieceInFront == null && _row == 6)
+                {
+                    Piece enemyPiece2FieldsInFront = BoardState.Instance.GetField(_row - 2, _column);
+                    if (enemyPiece2FieldsInFront == null)
+                    {
+                        PathManager.CreatePathInSpotDirection(this, -2, 0);
+                    }
+                }
+
+                // attack diagonally
+                Piece enemyPieceDiagonalLeft = null;
+                if (_column - 1 >= 0)
+                    enemyPieceDiagonalLeft = BoardState.Instance.GetField(_row - 1, _column - 1);
+                if (enemyPieceDiagonalLeft != null
+                    && BoardState.Instance.IsInBorders(enemyPieceDiagonalLeft.Location.Row, enemyPieceDiagonalLeft.Location.Column)
+                    && enemyPieceDiagonalLeft.PieceColor != this.PieceColor)
+                {
+                    PathManager.CreatePathInSpotDirection(this, -1, -1);
+                }
+
+                Piece enemyPieceDiagonalRight = null;
+                if (_column + 1 <= 7)
+                    enemyPieceDiagonalRight = BoardState.Instance.GetField(_row - 1, _column + 1);
+                if (enemyPieceDiagonalRight != null
+                    && BoardState.Instance.IsInBorders(enemyPieceDiagonalRight.Location.Row, enemyPieceDiagonalRight.Location.Column)
+                    && enemyPieceDiagonalRight.PieceColor != this.PieceColor)
+                {
+                    PathManager.CreatePathInSpotDirection(this, -1, 1);
+                }
+
+                // en passant
+                Piece enemyLeft = null;
+                if (_column - 1 >= 0)
+                    enemyLeft = BoardState.Instance.GetField(_row, _column - 1);
+                if (enemyLeft != null && GameManager.Instance.Passantable == enemyLeft)
+                {
+                    CreatePassantSpace(-1, -1);
+                }
+                else
+                {
+                    Piece enemyRight = null;
+                    if (_column + 1 <= 7)
+                        enemyRight = BoardState.Instance.GetField(_row, _column + 1);
+                    if (enemyRight != null && GameManager.Instance.Passantable == enemyRight)
+                    {
+                        CreatePassantSpace(-1, 1);
+                    }
+                }
+            }
+            else if (this.PieceColor == SideColor.Black)
+            {
+                // move one field forward
+                Piece enemyPieceInFront = BoardState.Instance.GetField(_row + 1, _column);
+                if (enemyPieceInFront == null)
+                {
+                    PathManager.CreatePathInSpotDirection(this, 1, 0);
+                }
+
+                // move two fields forward
+                if (enemyPieceInFront == null && _row == 1)
+                {
+                    Piece enemyPiece2FieldsInFront = BoardState.Instance.GetField(_row + 2, _column);
+                    if (enemyPiece2FieldsInFront == null)
+                    {
+                        PathManager.CreatePathInSpotDirection(this, 2, 0);
+                    }
+                }
+
+                // attack diagonally
+                Piece enemyPieceDiagonalLeft = null;
+                if (_column - 1 >= 0)
+                    enemyPieceDiagonalLeft = BoardState.Instance.GetField(_row + 1, _column - 1);
+                if (enemyPieceDiagonalLeft != null
+                    && _column - 1 >= 0
+                    && BoardState.Instance.IsInBorders(enemyPieceDiagonalLeft.Location.Row, enemyPieceDiagonalLeft.Location.Column)
+                    && enemyPieceDiagonalLeft.PieceColor != this.PieceColor)
+                {
+                    PathManager.CreatePathInSpotDirection(this, 1, -1);
+                }
+
+                Piece enemyPieceDiagonalRight = null;
+                if (_column + 1 <= 7)
+                    enemyPieceDiagonalRight = BoardState.Instance.GetField(_row + 1, _column + 1);
+                if (enemyPieceDiagonalRight != null
+                    && _column + 1 <= 7
+                    && BoardState.Instance.IsInBorders(enemyPieceDiagonalRight.Location.Row, enemyPieceDiagonalRight.Location.Column)
+                    && enemyPieceDiagonalRight.PieceColor != this.PieceColor)
+                {
+                    PathManager.CreatePathInSpotDirection(this, 1, 1);
+                }
+
+                // en passant
+                Piece enemyLeft = null;
+                if (_column - 1 >= 0)
+                    enemyLeft = BoardState.Instance.GetField(_row, _column - 1);
+                if (enemyLeft != null && GameManager.Instance.Passantable == enemyLeft)
+                {
+                    CreatePassantSpace(1, -1);
+                }
+                else
+                {
+                    Piece enemyRight = null;
+                    if (_column + 1 <= 7)
+                        enemyRight = BoardState.Instance.GetField(_row, _column + 1);
+                    if (enemyRight != null && GameManager.Instance.Passantable == enemyRight)
+                    {
+                        CreatePassantSpace(1, 1);
+                    }
+                }
+            }
         }
 
         private void CreateAttackSpace(int rowDirection, int columnDirection)
         {
-            if (!BoardState.Instance.IsInBorders(_row + rowDirection, _column + columnDirection) == true) return;
+            if (!BoardState.Instance.IsInBorders(_row + rowDirection, _column + columnDirection)) 
+                return;
             Piece piece = BoardState.Instance.GetField(_row + rowDirection, _column + columnDirection);
-            if (piece != null && piece.PieceColor != PieceColor)
+            if (piece != null && piece.PieceColor != this.PieceColor)
             {
                 PathManager.CreatePathInSpotDirection(this, rowDirection, columnDirection);
             }
@@ -99,11 +222,14 @@ namespace ChessMainLoop
                 }
             }
 
-            //Following sections check if one in looking direction of the pawn is awailable for moving to
-            if (!BoardState.Instance.IsInBorders(row + _direction, column)) return false;
-            if (BoardState.Instance.GetField(row + _direction, column) != null) return false;
+            //Following sections check if one in looking direction of the pawn is available for moving to
+            if (!BoardState.Instance.IsInBorders(row + _direction, column)) 
+                return false;
+            if (BoardState.Instance.GetField(row + _direction, column) != null) 
+                return false;
 
-            if (GameEndCalculator.CanMoveToSpot(row, column, _direction, 0, PieceColor)) return true;
+            if (GameEndCalculator.CanMoveToSpot(row, column, _direction, 0, PieceColor)) 
+                return true;
 
             return false;
         }

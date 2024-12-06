@@ -43,6 +43,54 @@ namespace ChessMainLoop
             /*
              * Potrebno je nadopuniti metodu logikom za pomicanje figure u danom smjeru definiranom parametrom lookupTable.
              */
+
+            int oldRow = caller.Location.Row;
+            int oldColumn = caller.Location.Column;
+            
+            for (int i = 0; i < lookupTable.GetLength(0); i++)
+            {
+                // move field by field diagonally
+                // break points: same color piece, enemy color piece, board edge
+                for (int j = 1;
+                     BoardState.Instance.IsInBorders(oldRow + j * lookupTable[i, 0], oldColumn + j * lookupTable[i, 1]);
+                     j++)
+                {
+                    int targetRow = oldRow + j * lookupTable[i, 0];
+                    int targetColumn = oldColumn + j * lookupTable[i, 1];
+                    Piece targetPiece = BoardState.Instance.GetField(targetRow, targetColumn);
+                    
+                    // Debug.LogFormat("polje {0}, {1} is in borders", targetRow, targetColumn);
+                    
+                    
+                    // if field not occupied, mark yellow and continue
+                    // if enemy, mark red and stop
+                    // if friend, don't mark and stop
+                    // is this all implemented in CreatePathInSpotDirection?
+                    if (targetPiece == null)
+                    {
+                        CreatePathInSpotDirection(caller, j * lookupTable[i, 0], j * lookupTable[i, 1]);
+                    }
+                    else // if a piece is on the field, mark red/don't mark and break
+                    {
+                        CreatePathInSpotDirection(caller, j * lookupTable[i, 0], j * lookupTable[i, 1]);
+                        break;
+                    }
+                    /*
+                    else if (targetPiece.PieceColor != caller.PieceColor)
+                    {
+                        CreatePathInSpotDirection(caller, j * lookupTable[i, 0], j * lookupTable[i, 1]);
+                        break;
+                    }
+                    else // (targetPiece.PieceColor == caller.PieceColor)
+                    {
+                        CreatePathInSpotDirection(caller, j * lookupTable[i, 0], j * lookupTable[i, 1]);
+                        break;
+                    }
+                    */
+                }
+            }
+            
+            
         }
 
         /// <summary>
@@ -66,23 +114,26 @@ namespace ChessMainLoop
             SideColor checkSide = BoardState.Instance.SimulateCheckState(startRow, startColumn, newRow, newColumn);
             if (checkSide == caller.PieceColor || checkSide == SideColor.Both) 
                 return false;
-
+            
             Piece piece = BoardState.Instance.GetField(newRow, newColumn);
             GameObject path;
+            // for empty field create a yellow path
             if (piece == null)
             {
                 path = ObjectPool.Instance.GetHighlightPath(PathPieceType.PathYellow);
             }
+            // for enemy field create a red path
             else if (piece.PieceColor != caller.PieceColor)
             {
                 path = ObjectPool.Instance.GetHighlightPath(PathPieceType.PathRed);
                 path.GetComponent<PathPiece>().AssignPiece(piece);
             }
+            // for a friendly field don't create anything
             else 
                 return false;
-
+            
             path.GetComponent<PathPiece>().Location = (newRow, newColumn);
-
+            
             Vector3 position = new Vector3();
 
             position.x = newRow * BoardState.Offset;
@@ -90,6 +141,7 @@ namespace ChessMainLoop
             position.y = path.transform.localPosition.y;
 
             path.transform.localPosition = position;
+            
             return true;
         }
 

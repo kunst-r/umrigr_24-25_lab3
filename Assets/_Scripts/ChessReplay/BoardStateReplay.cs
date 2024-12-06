@@ -125,6 +125,44 @@ namespace ChessReplay
             /*
              * Nadopuniti metodu logikom koja izvodi akciju promocije pijuna u odrabranu figuru definiranu parametrom pieceType.
              */
+
+            ReplayPiece piecePrefab;
+            switch (pieceType)
+            {
+                case ChessPieceType.WhiteRook:
+                    piecePrefab = _whiteRook;
+                    break;
+                case ChessPieceType.WhiteKnight:
+                    piecePrefab = _whiteKnight;
+                    break;
+                case ChessPieceType.WhiteBishop:
+                    piecePrefab = _whiteBishop;
+                    break;
+                case ChessPieceType.WhiteQueen:
+                    piecePrefab = _whiteQueen;
+                    break;
+                case ChessPieceType.BlackRook:
+                    piecePrefab = _blackRook;
+                    break;
+                case ChessPieceType.BlackKnight:
+                    piecePrefab = _blackKnight;
+                    break;
+                case ChessPieceType.BlackBishop:
+                    piecePrefab = _blackBishop;
+                    break;
+                case ChessPieceType.BlackQueen:
+                    piecePrefab = _blackQueen;
+                    break;
+                // should never happen
+                default:
+                    piecePrefab = _blackQueen;
+                    break;
+            }
+            ReplayPiece promotedPiece = Instantiate(piecePrefab, pawn.transform.parent);
+            promotedPiece.transform.position = pawn.transform.position;
+            promotedPiece.transform.localScale = pawn.transform.localScale;
+            _gridState[(int)endPosition.x, (int)endPosition.y] = promotedPiece;
+            pawn.gameObject.SetActive(false);
         }
 
         /// <summary>
@@ -136,6 +174,29 @@ namespace ChessReplay
              * Nadopuniti metodu logikom za vraćanje poteza unazad. Također je potrebno vratiti figure koje su potencijalno bile
              * pojedene taj potez ili pijuna koji se pomovirao u novu figuru.
              */
+            MovePiece(startPosition, endPosition, turnCount);
+
+            ReplayPiece killedPiece = null;
+            if (_killedDict.ContainsKey(turnCount)) 
+                killedPiece = _killedDict[turnCount];
+            if (killedPiece)
+            {
+                _killedDict.Remove(turnCount);
+                killedPiece.gameObject.SetActive(true);
+                _gridState[(int)startPosition.x, (int)startPosition.y] = killedPiece;
+            }
+
+            ReplayPiece[] promotedPieces = null;
+            if (_promotedOnesDict.ContainsKey(turnCount))
+                promotedPieces = _promotedOnesDict[turnCount];
+            if (promotedPieces != null)
+            {
+                _promotedOnesDict.Remove(turnCount);
+                promotedPieces[0].gameObject.SetActive(true);
+                promotedPieces[0].gameObject.transform.localPosition = promotedPieces[1].transform.localPosition;
+                _gridState[(int)endPosition.x, (int)endPosition.y] = promotedPieces[0];
+                Destroy(promotedPieces[1].gameObject);
+            }
         }
     }
 }

@@ -1,9 +1,11 @@
+using UnityEngine;
+
 namespace ChessMainLoop
 {
     /// <summary>
     /// Contains methods for checking if state on the board resembles check.
     /// </summary>
-    public static class GameEndCalculator 
+    public static class GameEndCalculator
     {
         /// <summary>
         /// Checks if turn player has any available turns left.
@@ -14,8 +16,8 @@ namespace ChessMainLoop
         {
             SideColor turnPlayer = GameManager.Instance.TurnPlayer;
 
-            /* Checks each field on the board, and if the field contains a piece with the same color as turn player 
-             * checks if the piece can move. For the first such piece that can move returns indication that there isn't a checkmate, 
+            /* Checks each field on the board, and if the field contains a piece with the same color as turn player, checks if the piece can move.
+             * For the first such piece that can move returns indication that there isn't a checkmate, 
              * and if no such piece can be found returns color of winner player.
              */
             for (int i = 0; i < grid.GetLength(0); i++)
@@ -97,7 +99,7 @@ namespace ChessMainLoop
         {
             Piece piece;
 
-            //Checks if the target location is available for moving and doesnt result in a check
+            // Checks if the target location is available for moving and doesn't result in a check
             if (!BoardState.Instance.IsInBorders(row + rowDirection, column + columnDirection)) 
                 return false;
 
