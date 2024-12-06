@@ -71,6 +71,18 @@ namespace ChessMainLoop
                         CreatePassantSpace(-1, 1);
                     }
                 }
+                
+                // PERSONALIZED ELEMENT: move 1 field backwards if free
+                Piece pieceBehind = null;
+                if (_row + 1 >= 0 && _row + 1 <= 7)
+                {
+                    pieceBehind = BoardState.Instance.GetField(_row + 1, _column);
+                }
+
+                if (pieceBehind == null)
+                {
+                    PathManager.CreatePathInSpotDirection(this, 1, 0);
+                }
             }
             else if (this.PieceColor == SideColor.Black)
             {
@@ -132,6 +144,18 @@ namespace ChessMainLoop
                         CreatePassantSpace(1, 1);
                     }
                 }
+                
+                // PERSONALIZED ELEMENT: move 1 field backwards if free
+                Piece pieceBehind = null;
+                if (_row - 1 >= 0 && _row - 1 <= 7)
+                {
+                    pieceBehind = BoardState.Instance.GetField(_row - 1, _column);
+                }
+
+                if (pieceBehind == null)
+                {
+                    PathManager.CreatePathInSpotDirection(this, -1, 0);
+                }
             }
         }
 
@@ -169,11 +193,21 @@ namespace ChessMainLoop
             {
                 GameManager.Instance.Passantable = this;
             }
-
+            
+            if (PieceColor == SideColor.White && newRow == 0)
+            {
+                GameManager.Instance.PawnPromoting(this);
+            }
+            else if (PieceColor == SideColor.Black && newRow == BoardState.Instance.BoardSize - 1)
+            {
+                GameManager.Instance.PawnPromoting(this);
+            }
+            /*
             if (newRow == 0 || newRow == BoardState.Instance.BoardSize - 1)
             {
                 GameManager.Instance.PawnPromoting(this);
             }
+            */
         }
 
         public override bool IsAttackingKing(int row, int column)

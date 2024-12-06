@@ -87,7 +87,6 @@ namespace ChessMainLoop
              * Nakon što završi pomicanje figure potrebno je zamijeniti koja je strana na potezu.
              */
 
-            // todo: jel nam ovo potrebno?
             SideColor checkedSide = BoardState.Instance.SimulateCheckState(oldRow, oldColumn, newRow, newColumn);
             GameManager.Instance.CheckedSide = checkedSide;
             
